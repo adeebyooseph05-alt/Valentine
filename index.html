@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bubbyluu Valentine ❤️</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+    background: #ffc0cb;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: 'Playfair Display', serif;
+}
+
+h1 {
+    font-family: 'Great Vibes', cursive;
+    font-size: 3.5rem;
+    color: #fff;
+    text-shadow: 2px 2px 10px rgba(255,0,100,0.7);
+    margin-bottom: 40px;
+    z-index: 2;
+    text-align: center;
+}
+
+.buttons {
+    position: relative;
+    width: 300px;
+    height: 100px;
+    z-index: 2;
+}
+
+button {
+    padding: 12px 35px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    position: absolute;
+    transition: 0.2s;
+    z-index: 2;
+}
+
+#yesBtn {
+    background-color: #ff66b2;
+    left: 0;
+}
+
+#noBtn {
+    background-color: purple;
+    color: white;
+    left: 200px;
+    top: 0;
+    position: absolute;
+}
+
+/* Content after Yes */
+#content {
+    display: none;
+    z-index: 3;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    max-width: 700px;
+    text-align: center;
+}
+
+img {
+    width: 220px;
+    border-radius: 20px;
+    box-shadow: 0 0 40px rgba(255,0,128,0.8);
+}
+
+.message {
+    text-align: center;
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: #fff;
+    text-shadow: 2px 2px 8px rgba(255,255,255,0.8);
+}
+
+.final-line {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 2px 2px 8px rgba(255,255,255,0.9);
+    margin-top: 10px;
+}
+
+#heartsCanvas, #fireworks {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+</style>
+</head>
+<body>
+
+<h1>Bubbyluu, will you be my Valentine?</h1>
+
+<div class="buttons">
+    <button id="yesBtn">Yes</button>
+    <button id="noBtn">No</button>
+</div>
+
+<div id="content">
+    <img src="us.jpg" alt="Us">
+    <div class="message">
+        Bubbyluu, when it comes to you, my heart has no ego.  
+        I don’t compete with you or fight for pride  I just choose you all the time.  
+
+        You mean the world to me.  
+        You are my calm, my happiness, my softness in a loud world.  
+
+        Loving you isn’t something I try to do  
+        it’s something my heart naturally does.  
+
+        I want to grow with you, support you, protect your heart,  
+        and build something real and beautiful together.  
+
+        I love you sooooo much more than words can explain.
+    </div>
+    <div class="final-line">HAPPY VALENTINE MY BUBBY GIRL</div>
+</div>
+
+<audio id="valentineMusic" src="music.mp3" preload="auto" loop></audio>
+
+<canvas id="heartsCanvas"></canvas>
+<canvas id="fireworks"></canvas>
+
+<script>
+// -------------------- Big red hearts --------------------
+const heartsCanvas = document.getElementById("heartsCanvas");
+const hCtx = heartsCanvas.getContext("2d");
+heartsCanvas.width = window.innerWidth;
+heartsCanvas.height = window.innerHeight;
+
+function drawHeart(ctx, x, y, size, color){
+    ctx.save();
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    let topCurveHeight = size*0.3;
+    ctx.moveTo(x, y + topCurveHeight);
+    ctx.bezierCurveTo(x, y, x-size/2, y, x-size/2, y+topCurveHeight);
+    ctx.bezierCurveTo(x-size/2, y+(size+topCurveHeight)/2, x, y+(size+topCurveHeight)/1.5, x, y+size);
+    ctx.bezierCurveTo(x, y+(size+topCurveHeight)/1.5, x+size/2, y+(size+topCurveHeight)/2, x+size/2, y+topCurveHeight);
+    ctx.bezierCurveTo(x+size/2, y, x, y, x, y+topCurveHeight);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+}
+
+let hearts = [];
+for(let i=0;i<100;i++){
+    hearts.push({
+        x: Math.random() * heartsCanvas.width,
+        y: Math.random() * heartsCanvas.height,
+        size: 20 + Math.random()*30,
+        dx: (Math.random()-0.5)*4,
+        dy: (Math.random()-0.5)*4,
+        color: "red"
+    });
+}
+
+function animateHearts(){
+    hCtx.clearRect(0,0,heartsCanvas.width,heartsCanvas.height);
+    hearts.forEach(h=>{
+        h.x += h.dx;
+        h.y += h.dy;
+        if(h.x<0) h.dx=Math.abs(h.dx);
+        if(h.x>heartsCanvas.width-h.size) h.dx=-Math.abs(h.dx);
+        if(h.y<0) h.dy=Math.abs(h.dy);
+        if(h.y>heartsCanvas.height-h.size) h.dy=-Math.abs(h.dy);
+        drawHeart(hCtx,h.x,h.y,h.size,h.color);
+    });
+    requestAnimationFrame(animateHearts);
+}
+animateHearts();
+
+// -------------------- Cheeky No button --------------------
+const noBtn=document.getElementById("noBtn");
+let no={x:noBtn.offsetLeft, y:noBtn.offsetTop, dx:6, dy:6, width:noBtn.offsetWidth, height:noBtn.offsetHeight};
+let noClickCount = 0; // track clicks
+
+function moveNo(){
+    const maxX = window.innerWidth - no.width;
+    const maxY = window.innerHeight - no.height;
+
+    no.x += no.dx;
+    no.y += no.dy;
+
+    if(no.x < 0){ no.x=0; no.dx=Math.abs(no.dx);}
+    if(no.x > maxX){ no.x=maxX; no.dx=-Math.abs(no.dx);}
+    if(no.y < 0){ no.y=0; no.dy=Math.abs(no.dy);}
+    if(no.y > maxY){ no.y=maxY; no.dy=-Math.abs(no.dy);}
+
+    noBtn.style.left=no.x+"px";
+    noBtn.style.top=no.y+"px";
+}
+
+// teleport when cursor gets really close
+function chaseCursor(e){
+    const rect=noBtn.getBoundingClientRect();
+    const btnX=rect.left+rect.width/2;
+    const btnY=rect.top+rect.height/2;
+    const distance=Math.hypot(e.clientX-btnX,e.clientY-btnY);
+
+    if(distance < 150){
+        const maxX = window.innerWidth - no.width;
+        const maxY = window.innerHeight - no.height;
+        no.x = Math.random()*maxX;
+        no.y = Math.random()*maxY;
+        noBtn.style.left=no.x+"px";
+        noBtn.style.top=no.y+"px";
+        no.dx = (Math.random()>0.5?1:-1)*(6+Math.random()*3);
+        no.dy = (Math.random()>0.5?1:-1)*(6+Math.random()*3);
+    }
+}
+
+noBtn.addEventListener("click",()=>{
+    noClickCount++;
+    if(noClickCount % 2 == 1){
+        noBtn.textContent="Don't make the wrong choice";
+    } else {
+        noBtn.textContent="No";
+    }
+});
+
+document.addEventListener("mousemove", chaseCursor);
+setInterval(moveNo,20);
+
+// -------------------- Yes button --------------------
+const yesBtn=document.getElementById("yesBtn");
+const content=document.getElementById("content");
+yesBtn.addEventListener("click",function(){
+    document.querySelector("h1").style.display="none";
+    document.querySelector(".buttons").style.display="none";
+    content.style.display="flex";
+
+    document.getElementById("valentineMusic").play();
+    startFireworks();
+});
+
+// -------------------- Fireworks --------------------
+const fireworksCanvas=document.getElementById("fireworks");
+const fCtx=fireworksCanvas.getContext("2d");
+fireworksCanvas.width=window.innerWidth;
+fireworksCanvas.height=window.innerHeight;
+let particles=[];
+
+function startFireworks(){
+    setInterval(()=>{
+        let x=Math.random()*fireworksCanvas.width;
+        let y=Math.random()*fireworksCanvas.height/2;
+        for(let i=0;i<200;i++){
+            particles.push({x:x,y:y,radius:2+Math.random()*4,color:`hsl(${Math.random()*360},100%,70%)`,angle:Math.random()*2*Math.PI,speed:Math.random()*12});
+        }
+    },300);
+}
+
+function animateFireworks(){
+    requestAnimationFrame(animateFireworks);
+    fCtx.fillStyle="rgba(255,192,203,0.05)";
+    fCtx.fillRect(0,0,fireworksCanvas.width,fireworksCanvas.height);
+    particles.forEach((p,i)=>{
+        p.x+=Math.cos(p.angle)*p.speed;
+        p.y+=Math.sin(p.angle)*p.speed;
+        p.speed*=0.92;
+        fCtx.beginPath();
+        fCtx.arc(p.x,p.y,p.radius,0,Math.PI*2);
+        fCtx.fillStyle=p.color;
+        fCtx.fill();
+        if(p.speed<0.5){particles.splice(i,1);}
+    });
+}
+animateFireworks();
+
+// -------------------- Resize --------------------
+window.addEventListener("resize",()=>{
+    heartsCanvas.width=window.innerWidth;
+    heartsCanvas.height=window.innerHeight;
+    fireworksCanvas.width=window.innerWidth;
+    fireworksCanvas.height=window.innerHeight;
+});
+</script>
+</body>
+</html>
